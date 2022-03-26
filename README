@@ -8,6 +8,32 @@
 # initial versions of programs output item count for each item transferred and ran forever
 # changed programs so only consumer prints output, and only first 2 per ever 10000 items received
 #
+
+////////////////////////////////////////////////////////////////////////////////
+//  consumer.cpp
+//   get items from shared buffer
+//   sync with producer to maintain buffer level by using semaphores
+//
+//   use 3 named semaphores to control access to shared memory buffer
+//     mutex: binary semaphore, lock access to shared memory, initial value = 1 unlocked
+//     full: counting semaphore, number in buffer, initial value = 0 nothing in buffer
+//     empty: counting semaphore, number of empty spots in buffer, initial value = 2 open locations in buffer
+//     
+//     consumer processing:
+//     wait for item in buffer : wait if full semaphore = 0
+//     wait for access to buffer : wait if mutex semephore = 0
+//     reads an item from buffer in shared memory
+//     output item data fields to stdout
+//     increments empty semaphore to signal that spot is open in buffer
+//     repeat (exit if exceed test MAX_TRANSFERS)
+//
+//     wait until data is in buffer before trying to access
+//     this prevents possibility that producer did not create shared memory before consumer tries to access
+//       (added this during debug, but problem may just have been wrong use of shm_unlink(name); in producer)
+//
+
+
+
 # compile
 g++ producer.cpp -pthread -lrt -o producer
 g++ consumer.cpp -pthread -lrt -o consumer

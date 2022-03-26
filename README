@@ -6,9 +6,27 @@
 # make items with tick, tock string and item number count up
 # producer creates items in shared buffer, consumer reads them and prints results
 # initial versions of programs output item count for each item transferred and ran forever
-# changed programs so only consumer prints output, and only first 2 per ever 10000 items received
+# in final version only consumer prints output, and only first 2 items per ever 10000 items received
 #
 
+////////////////////////////////////////////////////////////////////////////////
+//  producer.cpp
+//   produce items and put into buffer in shared memory
+//   sync with consumer to maintain buffer level by using semaphores
+//
+//   use 3 named semaphores to control access to shared memory buffer
+//     mutex: binary semaphore, lock access to shared memory, initial value = 1 unlocked
+//     full: counting semaphore, number in buffer, initial value = 0 nothing in buffer
+//     empty: counting semaphore, number of empty spots in buffer, initial value = 2 open locations in buffer
+//     
+//     producer processing:
+//     create an item that can be transferred
+//     wait for empty spot in shared memory : wait if empty semaphore = 0
+//     wait for access to buffer : wait if mutex semephore = 0
+//     producer writes an item to buffer in shared memory
+//     increments full semaphore to signal that new item is in buffer
+//     repeat (exit if exceed test MAX_TRANSFERS)
+//
 ////////////////////////////////////////////////////////////////////////////////
 //  consumer.cpp
 //   get items from shared buffer
@@ -31,6 +49,7 @@
 //     this prevents possibility that producer did not create shared memory before consumer tries to access
 //       (added this during debug, but problem may just have been wrong use of shm_unlink(name); in producer)
 //
+////////////////////////////////////////////////////////////////////////////////
 
 
 

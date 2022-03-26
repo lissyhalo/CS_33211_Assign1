@@ -6,7 +6,7 @@
 # make items with tick, tock string and item number count up
 # producer creates items in shared buffer, consumer reads them and prints results
 # initial versions of programs output item count for each item transferred and ran forever
-# in final version only consumer prints output, and only first 2 items per ever 10000 items received
+# in final version only consumer prints output, and only first 2 items per every 10000 items received
 #
 
 ////////////////////////////////////////////////////////////////////////////////

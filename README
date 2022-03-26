@@ -1,0 +1,33 @@
+# CS 33211 Assignment 1
+# Producer-Consumer
+# build and run in WSL2 under windows10
+#
+# make items with tick, tock string and item number count up
+# producer creates items in shared buffer, consumer reads them and prints results
+# initial versions of programs output item count for each item transferred and ran forever
+# changed programs so only consumer prints output, and only first 2 per ever thousand
+#
+# compile
+g++ producer.cpp -pthread -lrt -o producer
+g++ consumer.cpp -pthread -lrt -o consumer
+
+# run both in background and send stdout and stderr to files
+./producer &> out_prod.txt & ./consumer &> out_con.txt &
+#   warning - files can grow unbounded, doesn't stop until your disk is full!
+
+
+# see results
+more out_prod.txt 
+more out_con.txt 
+ 
+# check what processes are running so you can stop them
+ps
+kill ### (pid)
+kill 18360
+kill 18361
+
+
+# use this to run producer in the background, but consumer in the foreground
+# this makes it easier to see messages consumed and allow to kill consumer by CTRL-C
+./producer & ./consumer 
+ 
